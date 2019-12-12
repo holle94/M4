@@ -1,0 +1,35 @@
+# https://www.ffiec.gov/Medianincome.htm (MSA) 
+
+# https://freddiemac.embs.com/FLoan/Data/download3.php (FMac)
+
+# https://www.census.gov/data/tables/time-series/demo/popest/2010s-total-metro-and-micro-statistical-areas.html#par_textimage (POP) 
+
+# Race 
+
+library(magrittr)
+library(readxl)
+Inc_MSA <- read_excel("C:/Users/Bruger/Desktop/FreddieMac_data_M4/MedianIncome_MSA.xls", 
+                       skip = 1) %>% 
+rename( area = `MSA/MD FIPS CODE NO.` ,
+        median_income = `2018 FFIEC EST. MSA/MD MEDIAN FAMILY INCOME**`) %>%  select(c(1,4))
+
+Race_MSA <- read_excel("C:/Users/Bruger/Desktop/FreddieMac_data_M4/Race_MSA.xlsx") %>% 
+  select(-c(2,12))
+
+Race_MSA$area %<>% as.numeric("area")
+
+data %>% count(area) %>% arrange(desc(n))
+
+data_f <- data %>% 
+  left_join(Inc_MSA, by = "area") %>% 
+  left_join(Race_MSA, by = "area")
+  
+data_f %>% count(median_income) %>% arrange(desc(n))
+data_f %>% count(White) %>% arrange(desc(n))
+
+
+
+# Yderligt data -----------------------------------------------------------
+
+u <- unique(data$area)
+length(u)
